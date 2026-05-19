@@ -6,9 +6,6 @@ import soundfile as sf
 from fastapi import File, UploadFile, APIRouter, HTTPException
 import torch.nn.functional as F
 
-from api.SR.SPEECHCOMMANDS import indx_to_lbl
-
-
 class AudioLogic(nn.Module):
   def __init__(self):
     super().__init__()
