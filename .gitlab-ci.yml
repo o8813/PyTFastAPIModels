@@ -5,16 +5,19 @@ stages:
 
 build_app:
   stage: build
+  image: docker:dind
   script:
     - docker build -t pytfastapimodels .
 
 run_tests:
   stage: test
+  image: docker:dind
   script:
     - docker run --rm pytfastapimodels pytest -s -v
 
 deploy_app:
   stage: deploy
+  image: docker:dind
   script:
     - docker compose up -d
   only:
