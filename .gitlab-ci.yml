@@ -1,21 +1,15 @@
 stages:
-  - build
-  - test
+  - build_and_test
   - deploy
 
 services:
   - docker:dind
 
-build_app:
-  stage: build
+build_and_test_app:
+  stage: build_and_test
   image: docker:latest
   script:
     - docker build -t pytfastapimodels .
-
-run_tests:
-  stage: test
-  image: docker:latest
-  script:
     - docker run --rm pytfastapimodels pytest -s -v
 
 deploy_app:
