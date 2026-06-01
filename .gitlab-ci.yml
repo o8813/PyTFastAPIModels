@@ -3,6 +3,10 @@ stages:
   - test
   - deploy
 
+variables:
+  DOCKER_HOST: unix:///var/run/docker.sock
+  DOCKER_TLS_CERTDIR: ""
+
 build_app:
   stage: build
   image: docker:latest
