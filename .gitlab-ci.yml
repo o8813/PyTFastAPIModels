@@ -3,25 +3,18 @@ stages:
   - test
   - deploy
 
-variables:
-  DOCKER_HOST: unix:///var/run/docker.sock
-  DOCKER_TLS_CERTDIR: ""
-
 build_app:
   stage: build
-  image: docker:latest
   script:
     - docker build -t pytfastapimodels .
 
 run_tests:
   stage: test
-  image: docker:latest
   script:
     - docker run --rm pytfastapimodels pytest -s -v
 
 deploy_app:
   stage: deploy
-  image: docker:latest
   script:
     - docker compose up -d
   only:
