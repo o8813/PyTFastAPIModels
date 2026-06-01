@@ -5,20 +5,20 @@ stages:
 
 build_app:
   stage: build
-  image: docker:dind
+  image: docker:latest
   script:
     - docker build -t pytfastapimodels .
 
 run_tests:
   stage: test
-  image: docker:dind
+  image: docker:latest
   script:
     - docker run --rm pytfastapimodels pytest -s -v
 
 deploy_app:
   stage: deploy
-  image: docker:dind
+  image: docker:latest
   script:
-    - docker compose up -d
+    - docker compose up -d --build --force-recreate
   only:
     - master
