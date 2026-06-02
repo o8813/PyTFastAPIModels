@@ -1,21 +1,33 @@
 stages:
-  - build_and_test
+  - build
+  - test
   - deploy
 
 services:
   - docker:dind
 
-build_and_test_app:
-  stage: build_and_test
+build_app:
+  stage: build
   image: docker:latest
   script:
-    - docker build -t pytfastapimodels .
-    - docker run --rm pytfastapimodels pytest -s -v
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+run_tests:
+  stage: test
+  image: $CI_REGISTRY_IMAGE:latest
+  script:
+    - pytest
 
 deploy_app:
   stage: deploy
-  image: docker:latest
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh-client
   script:
-    - docker compose up -d --build --force-recreate
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP
+    - docker pull $CI_REGISTRY_IMAGE:latest
+    - docker run -d --rm -p 80:80 $CI_REGISTRY_IMAGE:latest
   only:
     - master
