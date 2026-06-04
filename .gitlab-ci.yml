@@ -3,11 +3,6 @@ stages:
   - test
   - deploy
 
-image: docker:latest
-
-services:
-  - docker:dind
-
 build-app:
   stage: build
   script:
