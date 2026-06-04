@@ -3,6 +3,8 @@ stages:
   - test
   - deploy
 
+services: docker:dind
+
 build-app:
   stage: build
   script:
