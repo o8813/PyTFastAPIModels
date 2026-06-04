@@ -3,7 +3,7 @@ stages:
   - test
   - deploy
 
-services: docker:dind
+image: docker:latest
 
 build-app:
   stage: build
