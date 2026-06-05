@@ -3,7 +3,7 @@ import torch.nn as nn
 from torchvision import transforms
 import io
 from PIL import Image
-from fastapi import HTTPException, APIRouter, File, UploadFile
+from fastapi import HTTPException, APIRouter, File, UploadFile, status
 
 class Vgg16Logic(nn.Module):
   def __init__(self):
@@ -79,7 +79,8 @@ async def predict_img(file: UploadFile = File(...)):
         with torch.no_grad():
             predict = model(tensor_img)
             predict_index = predict.argmax(dim=1).item()
+            predict_label = labels[predict_index]
 
-            return {'Prediction': labels[predict_index]}
+            return {'Prediction': predict_label}
     except Exception as e:
-        raise HTTPException(detail=str(e), status_code=500)
+        raise HTTPException(detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
