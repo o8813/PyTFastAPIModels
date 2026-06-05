@@ -1,6 +1,6 @@
 stages:
-  - build
   - test
+  - build
   - deploy
 
 image: docker:latest
@@ -9,7 +9,13 @@ services:
   - docker:dind
 
 variables:
-  IMAGE_NAME: docker.io/$DOCKER_HUB_USERNAME/pytdrfmodels
+  IMAGE_NAME: docker.io/$DOCKER_HUB_USERNAME/pytfastapimodels
+
+run-tests:
+  stage: test
+  script:
+    - docker build -t test-image .
+    - docker run --rm test-image pytest
 
 build-and-push:
   stage: build
@@ -17,13 +23,8 @@ build-and-push:
     - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_TOKEN docker.io
     - docker build -t $IMAGE_NAME:latest .
     - docker push $IMAGE_NAME:latest
-
-run-tests:
-  stage: test
-  script:
-    - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_TOKEN docker.io
-    - docker pull $IMAGE_NAME:latest
-    - docker run --rm $IMAGE_NAME:latest pytest
+  only:
+    - master
 
 deploy:
   stage: deploy
