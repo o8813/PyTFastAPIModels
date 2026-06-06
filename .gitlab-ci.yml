@@ -37,7 +37,7 @@ deploy:
     - >
       ssh $SERVER_USER@$SERVER_IP "
         cd /home/ubuntu/project &&
-        docker system prune -a -f &&
+        docker image prune -f &&
         docker pull $IMAGE_NAME:latest &&
         docker compose down || true &&
         docker compose up -d
