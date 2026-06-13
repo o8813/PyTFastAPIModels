@@ -3,7 +3,7 @@ import torch.nn as nn
 from torchaudio import transforms
 import io
 import soundfile as sf
-import torch.nn.functional as F
+import torch.nn.functional as f
 from fastapi import HTTPException, APIRouter, File, UploadFile
 
 class AudioLogic(nn.Module):
@@ -80,7 +80,7 @@ def change_audio(waveform, sample_rate):
         spec = spec[:, :max_len]
 
     if spec_length < max_len:
-        spec = F.pad(spec, (0, max_len - spec_length))
+        spec = f.pad(spec, (0, max_len - spec_length))
 
     return spec
 
